@@ -25,9 +25,8 @@ use bigcassandra;
 create table emp(emp_id int PRIMARY KEY, emp_name text, emp_city text, emp_sal varint, emp_phone varint);
 
 Insert into table
-Insert into emp(emp_id, emp_name, emp_city, emp_sal, emp_phone) Values(1, 'pankaj', 'Dublin', 500000, 12345);
-Insert into emp(emp_id, emp_name, emp_city, emp_sal, emp_phone) Values(3, 'preeti', 'Dublin', 1500000, 12346);
-Insert into emp(emp_id, emp_name, emp_city, emp_sal, emp_phone) Values(2, 'vivaan', 'Dublin', 10000, 12347);
+Insert into emp(emp_id, emp_name, emp_city, emp_sal, emp_phone) Values(1, 'test', 'test_city', 500000, 12345);
+
 
 ## Create the actual table for url shortening
 Create table UrlMap(tiny_url text PRIMARY KEY, url text);
