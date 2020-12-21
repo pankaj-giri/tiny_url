@@ -1,3 +1,8 @@
+# TinyUrl
+This repository uses a simple idea of generating a tiny url, to create a scalable system on AWS cloud. 
+
+Uses python backend, and Cassandra database, with the python service hosted in AWS EC2 instances behind a load balancer, and Cassandra installed on a cluster of 2 AWS EC2 instances. 
+
 # Working with cassandra (Virtualbox)
 
 
