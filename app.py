@@ -1,14 +1,13 @@
 from flask import Blueprint, Flask
 from views.api import api
-from cassandra.cluster import Cluster
+from config import create_config
+import os
 
 def create_app():
     app = Flask(__name__)
+    config_ = create_config(os.getenv('FLASK_CONFIG') or 'default')
+    app.config.from_object(config_)
     app.register_blueprint(api)
-
-    cluster = Cluster()
-    session = cluster.connect()
-
     return app
 
 app = create_app()
