@@ -38,10 +38,10 @@ def retrieve(id):
     results = urlmap.objects.filter(tiny_url=id)
 
     if len(results) == 0:
-        return f"No results found for id : {id}"
+        return jsonify(f"No results found for id : {id}")
 
     for instance in results:
         result = instance.url
     
-    return f"URL for id {id} is {result}"
+    return jsonify(f"URL for id {id} is {result}")
 
