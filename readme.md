@@ -15,6 +15,9 @@ You can start cassandra CLI using the command -
 <p>cqlsh<p>
 but for some weird reason it works only on python3.7, so set environment python3.7 for using cassandra cli
 
+## Create a keyspace
+` create keyspace bigcassandra with replication = {'class':'SimpleStrategy', 'replication_factor':3};`
+
 `use bigcassandra;`
 
 List all tables in bigcassandra..
@@ -54,7 +57,13 @@ This service is containerized into a docker container..
 
 You could run into issues connecting the backend running within the docker container and cassandra which is hosted in the base machine.
 
-Steps to debug..
+What finally works is that you need to start the docker, such that it uses the host network --
+`sudo docker run --network=host -p 5000:5000 -it 0296699de4d4 /bin/bash`
+
+Tried various other things.. but nothing works..
+(Got the solution in https://stackoverflow.com/questions/54876879/connecting-cassandra-container-using-another-container)
+
+## Some debugging tips
 
 Check if you can access a service from docker..
 
@@ -72,6 +81,10 @@ Check the ip of the docker using
 The ip shown there something like `172.17.0.1`, is the ip of the machine that docker can see. Now try accessing the base machine using this IP.
 
 `curl 172.17.0.1:9999` ... This will work. Now change the cassandra connection ip from `127.0.0.1` to `172.17.0.1`
+
+Show the ip of the docker..
+
+`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_id>`
 
 # Multi-stage docker
 
