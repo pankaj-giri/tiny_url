@@ -47,3 +47,54 @@ Insert into UrlMap(tiny_url, url) Values ('http://mytinyurl.com/abcd', 'https://
 ## If the service runs in VirtualBox, how do you access this externally?
 
 In that case start the VM in the bridged networking mode. This causes an independent ip address to be assigned to this. You can use that IP address to access this service
+
+This service is containerized into a docker container..
+
+# Troubleshooting connectivity issues between docker and cassandra
+
+You could run into issues connecting the backend running within the docker container and cassandra which is hosted in the base machine.
+
+Steps to debug..
+
+Check if you can access a service from docker..
+
+Run
+`nc -l 9999` in the base machine
+
+Try to access the service from docker using
+
+`curl 127.0.0.1:9999` .... This will not work, as you cannot access the base machine from docker using the 127 addressing.
+
+Check the ip of the docker using
+
+`ip addr show docker0`
+
+The ip shown there something like `172.17.0.1`, is the ip of the machine that docker can see. Now try accessing the base machine using this IP.
+
+`curl 172.17.0.1:9999` ... This will work. Now change the cassandra connection ip from `127.0.0.1` to `172.17.0.1`
+
+# Multi-stage docker
+
+Using a multi-staged docker container build to cut down on the docker build runtime..
+
+
+`FROM python:3.8-slim as base_image`
+
+`WORKDIR /app`
+
+`COPY requirements.txt ./`
+`RUN pip install --no-cache-dir -r requirements.txt`
+
+`FROM base_image AS app_build`
+
+`COPY . ./`
+
+`CMD [ "python", "app.py" ]`
+
+Building the container
+
+`sudo docker build --target app_build -t system_design:tiny_url .`
+
+
+
+

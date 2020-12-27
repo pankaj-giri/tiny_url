@@ -21,6 +21,7 @@ def create_dev_cfg():
     print('Creating dev config')
     class DevelopmentConfig(Config):
         # traceback.print_stack()
+        # connection.setup(['172.17.0.1'], 'cqlengine', protocol_version=3)
         connection.setup(['127.0.0.1'], 'cqlengine', protocol_version=3)
         cluster = Cluster()
         session = cluster.connect()
