@@ -2,9 +2,11 @@ import requests
 from core.url_mapper import get_url
 import logging
 from tqdm import tqdm
+import time
 
 def test_load_addretrieve():
-    iterations = 10000
+    start = time.time()
+    iterations = 100
     add_url = 'http://127.0.0.1:5000/add'
     add_map = dict()
 
@@ -22,3 +24,5 @@ def test_load_addretrieve():
         response = requests.get(retrieve_url+'/'+id_)
         assert response.status_code == 200
         assert response.json().split()[-1] == add_map[id_]
+
+    print(f'Inserting and retrieving {iterations} url took {time.time()-start} seconds')

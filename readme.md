@@ -109,4 +109,4 @@ Building the container
 `sudo docker build --target app_build -t system_design:tiny_url .`
 
 # Running the test cases
-`pytest tests/test_api.py`
+`pytest tests/test_api.py -s`
