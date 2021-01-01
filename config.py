@@ -12,9 +12,12 @@ class Config(object):
 #only the required configurations, else all config objects
 #are created as soon as the file is loaded
 def create_prod_cfg():
+    print('Creating prod config')
     class ProductionConfig(Config):
-        DATABASE_URI = 'mysql://user@localhost/foo'
-    
+        connection.setup(['52.207.84.19'], 'cqlengine', protocol_version=3)
+        cluster = Cluster()
+        session = cluster.connect()
+        DEBUG = True    
     return ProductionConfig
 
 def create_dev_cfg():
@@ -43,4 +46,4 @@ def create_config(environment):
     elif environment == 'production':
         return create_prod_cfg()
     else:
-        return create_dev_cfg()
+        return create_prod_cfg()

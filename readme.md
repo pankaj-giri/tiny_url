@@ -110,3 +110,36 @@ Building the container
 
 # Running the test cases
 `pytest tests/test_api.py -s`
+
+# Cassandra on EC2 instance
+Install cassandra as per the instructions on the above link on an Ubuntu EC2 instance.
+
+Edit `/etc/cassandra/cassandra.yaml` with the following configurations..
+
+Replace localhost with the private ip of the ec2 instance (in this case `172.31.30.180`)
+
+``
+seed_provider:
+    # Addresses of hosts that are deemed contact points. 
+    # Cassandra nodes use this list of hosts to find each other and learn
+    # the topology of the ring.  You must change this if you are running
+    # multiple nodes!
+    - class_name: org.apache.cassandra.locator.SimpleSeedProvider
+      parameters:
+          # seeds is actually a comma-delimited list of addresses.
+          # Ex: "<ip1>,<ip2>,<ip3>"
+          - seeds: "172.31.30.180:7000"
+          #- seeds: "127.0.0.1:7000"
+rpc_address: 172.31.30.180
+listen_address: 172.31.30.180
+``
+
+Restart cassandra `sudo systemctl restart cassandra`
+
+Connect to the cassandra instance
+`cqlsh 172.31.30.180` and create a keyspace `create keyspace bigcassandra with replication = {'class':'SimpleStrategy', 'replication_factor':3};`
+
+Create a table 
+`Create table UrlMap(tiny_url text PRIMARY KEY, url text);`
+
+Run the test case in your local `pytest tests/test_api.py -s`

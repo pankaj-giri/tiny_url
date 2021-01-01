@@ -6,7 +6,7 @@ import time
 
 def test_load_addretrieve():
     start = time.time()
-    iterations = 100
+    iterations = 10000
     add_url = 'http://127.0.0.1:5000/add'
     add_map = dict()
 
