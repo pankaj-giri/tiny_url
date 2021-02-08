@@ -19,7 +19,10 @@ cqlsh localhost --cqlversion="3.4.5"
 ```
 
 You can start cassandra CLI using the command - 
-<p>cqlsh<p>
+```
+cqlsh
+```
+
 but for some weird reason it works only on python3.7, so set environment python3.7 for using cassandra cli
 
 ## Create a keyspace
@@ -116,7 +119,29 @@ Building the container
 `sudo docker build --target app_build -t system_design:tiny_url .`
 
 # Running the test cases
+Testing the API
+
 `pytest tests/test_api.py -s`
+
+To run some stress tests on the api's use the following command. This checks how long it takes to insert 10000 URLs and retrieve them. Test on this system shows..
+
+```
+(python3.7) pankaj@LAPTOP-1LSIP1HC:~/tiny_url$ pytest tests/test_load_api.py -s
+======================================================================== test session starts ========================================================================
+platform linux -- Python 3.8.5, pytest-6.1.1, py-1.9.0, pluggy-0.13.1
+rootdir: /home/pankaj/tiny_url
+collected 1 item                                                                                                                                                    
+
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 10000/10000 [01:08<00:00, 145.62it/s]
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 10000/10000 [00:37<00:00, 270.21it/s]
+Inserting and retrieving 10000 url took 105.68551993370056 seconds
+.
+
+=================================================================== 1 passed in 105.80s (0:01:45) ===================================================================
+```
+
+
+`pytest tests/test_load_api.py`
 
 # Cassandra on EC2 instance
 Install cassandra as per the instructions on the above link on an Ubuntu EC2 instance.
