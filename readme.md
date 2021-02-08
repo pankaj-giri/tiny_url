@@ -11,6 +11,13 @@ Source : https://phoenixnap.com/kb/install-cassandra-on-ubuntu
 
 conda activate python3.8<p>
 
+## On WSL2
+Had some issues getting cassandra to work on WSL. 
+To use cqlsh you'll need to use
+```
+cqlsh localhost --cqlversion="3.4.5"
+```
+
 You can start cassandra CLI using the command - 
 <p>cqlsh<p>
 but for some weird reason it works only on python3.7, so set environment python3.7 for using cassandra cli
