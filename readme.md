@@ -63,15 +63,46 @@ In that case start the VM in the bridged networking mode. This causes an indepen
 
 This service is containerized into a docker container..
 
-# Troubleshooting connectivity issues between docker and cassandra
+# Multi-stage docker
 
-You could run into issues connecting the backend running within the docker container and cassandra which is hosted in the base machine.
+Using a multi-staged docker container build to cut down on the docker build runtime..
 
-What finally works is that you need to start the docker, such that it uses the host network --
+
+`FROM python:3.8-slim as base_image`
+
+`WORKDIR /app`
+
+`COPY requirements.txt ./`
+`RUN pip install --no-cache-dir -r requirements.txt`
+
+`FROM base_image AS app_build`
+
+`COPY . ./`
+
+`CMD [ "python", "app.py" ]`
+
+Building the container
+
+`sudo docker build --target app_build -t system_design:tiny_url .`
+
+# Start the application
+
+Ensure docker is running in WSL. The docker desktop service on Windows causes connectivity issues with Cassandra.
+
+`sudo service start docker`
+
+Start the container
+
 `sudo docker run --network=host -p 5000:5000 -it 0296699de4d4 /bin/bash`
 
-Tried various other things.. but nothing works..
-(Got the solution in https://stackoverflow.com/questions/54876879/connecting-cassandra-container-using-another-container)
+If the application is being run in the local environment, you'll need to set the environment as development before starting the application in docker shell
+
+`export FLASK_CONFIG="development"`
+
+`python app.py`
+
+### Troubleshooting connectivity issues
+(https://stackoverflow.com/questions/54876879/connecting-cassandra-container-using-another-container)
 
 ## Some debugging tips
 
@@ -95,28 +126,6 @@ The ip shown there something like `172.17.0.1`, is the ip of the machine that do
 Show the ip of the docker..
 
 `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_id>`
-
-# Multi-stage docker
-
-Using a multi-staged docker container build to cut down on the docker build runtime..
-
-
-`FROM python:3.8-slim as base_image`
-
-`WORKDIR /app`
-
-`COPY requirements.txt ./`
-`RUN pip install --no-cache-dir -r requirements.txt`
-
-`FROM base_image AS app_build`
-
-`COPY . ./`
-
-`CMD [ "python", "app.py" ]`
-
-Building the container
-
-`sudo docker build --target app_build -t system_design:tiny_url .`
 
 # Running the test cases
 Testing the API
