@@ -159,6 +159,7 @@ Edit `/etc/cassandra/cassandra.yaml` with the following configurations..
 
 Replace localhost with the private ip of the ec2 instance (in this case `172.31.30.180`)
 
+seeds will have the public ip of the ec2
 ``
 seed_provider:
     # Addresses of hosts that are deemed contact points. 
@@ -169,10 +170,12 @@ seed_provider:
       parameters:
           # seeds is actually a comma-delimited list of addresses.
           # Ex: "<ip1>,<ip2>,<ip3>"
-          - seeds: "172.31.30.180:7000"
+          - seeds: "52.66.206.122"
           #- seeds: "127.0.0.1:7000"
-rpc_address: 172.31.30.180
-listen_address: 172.31.30.180
+rpc_address: 172.31.30.180 #private ip of ec2
+listen_address: 172.31.30.180 #private ip of ec2
+broadcast_address: 52.66.206.122 # public ip of ec2 instance
+endpoint_snitch: SimpleSnitch
 ``
 
 Restart cassandra `sudo systemctl restart cassandra`
